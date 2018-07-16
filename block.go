@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"strconv"
+	"time"
 )
 
 // Block structure
@@ -20,4 +21,11 @@ func (b *Block) SetHash() {
 	header := bytes.Join([][]byte{b.PrevBlockHash, b.Data, timestamp}, []byte{})
 	hash := sha256.Sum256(header)
 	b.Hash = hash[:]
+}
+
+// NewBlock is a func create a new block
+func (b *Block) NewBlock(data string, PrevBlockHash []byte) (block *Block) {
+	block = &Block{time.Now().Unix(), []byte(data), PrevBlockHash, []byte{}}
+	block.SetHash()
+	return
 }
