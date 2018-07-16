@@ -24,7 +24,7 @@ func (b *Block) SetHash() {
 }
 
 // NewBlock is a func create a new block
-func (b *Block) NewBlock(data string, PrevBlockHash []byte) (block *Block) {
+func NewBlock(data string, PrevBlockHash []byte) (block *Block) {
 	block = &Block{time.Now().Unix(), []byte(data), PrevBlockHash, []byte{}}
 	block.SetHash()
 	return
