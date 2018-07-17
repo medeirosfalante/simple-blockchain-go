@@ -1,6 +1,9 @@
 package main
 
-import "math/big"
+import (
+	"bytes"
+	"math/big"
+)
 
 // difficulty miner
 const targetBits = 24
@@ -17,4 +20,19 @@ func NewPOW(b *Block) (pow *ProofOfWork) {
 	target.Lsh(target, uint(256-targetBits))
 	pow = &ProofOfWork{b, target}
 	return
+}
+
+func (p *ProofOfWork) prepareData(nonce int) []byte {
+	data := bytes.Join(
+		[][]byte{
+			p.block.PrevBlockHash,
+			p.block.Data,
+			IntToHex(p.block.Timestamp),
+			IntToHex(int64(targetBits)),
+			IntToHex(int64(nonce)),
+		},
+		[]byte{},
+	)
+	return data
+
 }
