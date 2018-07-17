@@ -11,3 +11,8 @@ func (b *Blockchain) AddBlock(data string) {
 	newBlock := NewBlock(data, prevBlock.Hash)
 	b.blocks = append(b.blocks, newBlock)
 }
+
+// NewGenesisBlock is a func Create a Genesis block
+func NewGenesisBlock() *Block {
+	return NewBlock("Genesis Block", []byte{})
+}
