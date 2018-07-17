@@ -73,4 +73,5 @@ func (p *ProofOfWork) Validate() (isValid bool) {
 	hashInt.SetBytes(hash[:])
 
 	isValid = hashInt.Cmp(p.target) == -1
+	return
 }
