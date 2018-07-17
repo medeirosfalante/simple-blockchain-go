@@ -2,6 +2,9 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
+	"fmt"
+	"math"
 	"math/big"
 )
 
@@ -35,4 +38,28 @@ func (p *ProofOfWork) prepareData(nonce int) []byte {
 	)
 	return data
 
+}
+
+// Execute is a func exec POW
+func (p *ProofOfWork) Execute() (int, []byte) {
+	var hashInt big.Int
+	var hash [32]byte
+	nonce := 0
+	maxNonce := math.MaxInt64
+
+	fmt.Printf("MINER the block containing data \"%s\"\n", p.block.Data)
+	for nonce < maxNonce {
+		data := p.prepareData(nonce)
+		hash = sha256.Sum256(data)
+		fmt.Printf("\r%x", hash)
+		hashInt.SetBytes(hash[:])
+
+		if hashInt.Cmp(p.target) == -1 {
+			break
+		} else {
+			nonce++
+		}
+	}
+	fmt.Print("\n\n")
+	return nonce, hash[:]
 }
