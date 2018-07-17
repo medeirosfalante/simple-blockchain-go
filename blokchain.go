@@ -16,3 +16,8 @@ func (b *Blockchain) AddBlock(data string) {
 func NewGenesisBlock() *Block {
 	return NewBlock("Genesis Block", []byte{})
 }
+
+// NewBlockchain is a func create a new Blockchain
+func NewBlockchain() *Blockchain {
+	return &Blockchain{[]*Block{NewGenesisBlock()}}
+}
