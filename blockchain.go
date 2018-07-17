@@ -1,9 +1,5 @@
 package main
 
-import (
-	"fmt"
-)
-
 //Blockchain is a struct for blockchain database
 type Blockchain struct {
 	blocks []*Block
@@ -24,8 +20,4 @@ func NewGenesisBlock() *Block {
 // NewBlockchain is a func create a new Blockchain
 func NewBlockchain() *Blockchain {
 	return &Blockchain{[]*Block{NewGenesisBlock()}}
-}
-
-func Test() {
-	fmt.Println("olá")
 }
