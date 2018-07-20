@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"encoding/gob"
+	"encoding/hex"
 	"fmt"
 	"log"
 )
@@ -68,4 +69,33 @@ func (out *TXOutput) CanBeUnlockedWith(unlockingData string) bool {
 // IsCoinbase check if transaction is coinbase
 func (tx Transaction) IsCoinbase() bool {
 	return len(tx.Vin) == 1 && len(tx.Vin[0].Txid) == 0 && tx.Vin[0].Vout == -1
+}
+
+// NewUTXOTransaction is a func create a new transaction
+func NewUTXOTransaction(from, to string, amount int, bc *Blockchain) *Transaction {
+	var inputs []TXInput
+	var outputs []TXOutput
+
+	acc, validatedOutputs := bc.FindSpendableOutputs(from, amount)
+	if acc < amount {
+		log.Panic("ERROR: not enough funds")
+	}
+	for txid, outs := range validatedOutputs {
+		txID, err := hex.DecodeString(txid)
+		if err != nil {
+			log.Panic(err)
+		}
+		for _, out := range outs {
+			input := TXInput{txID, out, from}
+			inputs = append(inputs, input)
+		}
+	}
+
+	outputs = append(outputs, TXOutput{amount, to})
+	if acc > amount {
+		outputs = append(outputs, TXOutput{acc - amount, from})
+	}
+	tx := Transaction{nil, inputs, outputs}
+	tx.SetID()
+	return &tx
 }
