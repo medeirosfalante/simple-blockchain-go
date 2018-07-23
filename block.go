@@ -27,7 +27,7 @@ func NewBlock(transactions []*Transaction, PrevBlockHash []byte) (block *Block) 
 	return
 }
 
-// Serialize is a func serializa
+// Serialize is a func serialize
 func (b *Block) Serialize() []byte {
 	var result bytes.Buffer
 	encoder := gob.NewEncoder(&result)

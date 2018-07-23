@@ -9,7 +9,10 @@ import (
 )
 
 // difficulty miner
-const targetBits = 24
+const (
+	targetBits = 24
+	maxNonce   = math.MaxInt64
+)
 
 // ProofOfWork is a struct for Proof of Work in miner
 type ProofOfWork struct {
@@ -45,8 +48,6 @@ func (p *ProofOfWork) Execute() (int, []byte) {
 	var hashInt big.Int
 	var hash [32]byte
 	nonce := 0
-	maxNonce := math.MaxInt64
-
 	fmt.Printf("Mining a new block")
 	for nonce < maxNonce {
 		data := p.prepareData(nonce)
