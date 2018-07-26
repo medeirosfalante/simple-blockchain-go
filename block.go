@@ -14,11 +14,12 @@ type Block struct {
 	PrevBlockHash []byte
 	Hash          []byte
 	Nonce         int
+	Height        int
 }
 
 // NewBlock is a func create a new block
-func NewBlock(transactions []*Transaction, PrevBlockHash []byte) (block *Block) {
-	block = &Block{time.Now().Unix(), transactions, PrevBlockHash, []byte{}, 0}
+func NewBlock(transactions []*Transaction, PrevBlockHash []byte, height int) (block *Block) {
+	block = &Block{time.Now().Unix(), transactions, PrevBlockHash, []byte{}, 0, height}
 	pow := NewPOW(block)
 	nonce, hash := pow.Execute()
 	block.Hash = hash[:]
@@ -51,7 +52,7 @@ func DeserializeBlock(d []byte) *Block {
 
 // NewGenesisBlock is a func Create a Genesis block
 func NewGenesisBlock(coinbase *Transaction) *Block {
-	return NewBlock([]*Transaction{coinbase}, []byte{})
+	return NewBlock([]*Transaction{coinbase}, []byte{}, 0)
 }
 
 // HashTransactions return a hash transaction
