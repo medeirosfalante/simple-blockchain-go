@@ -11,10 +11,8 @@ import (
 	"golang.org/x/crypto/ripemd160"
 )
 
-const version = byte(0x00)
+const versionAdd = byte(0x00)
 const addressChecksumLen = 4
-
-const walletFile = "wallet.dat"
 
 // Wallet struct
 type Wallet struct {
@@ -42,7 +40,7 @@ func newKeyPair() (ecdsa.PrivateKey, []byte) {
 // GetAddress is a func
 func (w Wallet) GetAddress() []byte {
 	pubKeyHash := HashPubKey(w.PublicKey)
-	versionPayload := append([]byte{version}, pubKeyHash...)
+	versionPayload := append([]byte{versionAdd}, pubKeyHash...)
 	checksum := checksum(versionPayload)
 	fullPayload := append(versionPayload, checksum...)
 	address := Base58Encode(fullPayload)
