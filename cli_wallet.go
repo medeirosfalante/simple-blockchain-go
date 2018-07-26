@@ -5,18 +5,18 @@ import (
 	"log"
 )
 
-func (cli *CLI) createWallet() {
-	wallets, _ := NewWallets()
+func (cli *CLI) createWallet(nodeID string) {
+	wallets, _ := NewWallets(nodeID)
 	address := wallets.CreateWallet()
-	wallets.SaveToFile()
+	wallets.SaveToFile(nodeID)
 	fmt.Printf("you address %s\n", address)
 }
 
-func (cli *CLI) getBalance(address string) {
+func (cli *CLI) getBalance(address string, nodeID string) {
 	if !ValidateAddress(address) {
-		log.Panic("ERROR: Address is a not valid")
+		log.Panic("ERROR: Address is not valid")
 	}
-	bc := NewBlockchain()
+	bc := NewBlockchain(nodeID)
 	UTXOSet := UTXOSet{bc}
 	defer bc.db.Close()
 
@@ -24,6 +24,7 @@ func (cli *CLI) getBalance(address string) {
 	pubKeyHash := Base58Decode([]byte(address))
 	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]
 	UTXOs := UTXOSet.FindUTXO(pubKeyHash)
+
 	for _, out := range UTXOs {
 		balance += out.Value
 	}
@@ -32,8 +33,8 @@ func (cli *CLI) getBalance(address string) {
 
 }
 
-func (cli *CLI) listAddresses() {
-	wallets, err := NewWallets()
+func (cli *CLI) listAddresses(nodeID string) {
+	wallets, err := NewWallets(nodeID)
 	if err != nil {
 		log.Panic(err)
 	}
