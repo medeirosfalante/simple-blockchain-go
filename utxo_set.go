@@ -97,45 +97,45 @@ func (u UTXOSet) CountTransactions() int {
 
 // Reindex rebuilds the UTXO set
 func (u UTXOSet) Reindex() {
-	// db := u.Blockchain.db
-	// bucketName := []byte(utxoBucket)
+	db := u.Blockchain.db
+	bucketName := []byte(utxoBucket)
 
-	// err := db.Update(func(tx *bolt.Tx) error {
-	// 	err := tx.DeleteBucket(bucketName)
-	// 	if err != nil && err != bolt.ErrBucketNotFound {
-	// 		log.Panic(err)
-	// 	}
+	err := db.Update(func(tx *bolt.Tx) error {
+		err := tx.DeleteBucket(bucketName)
+		if err != nil && err != bolt.ErrBucketNotFound {
+			log.Panic(err)
+		}
 
-	// 	_, err = tx.CreateBucket(bucketName)
-	// 	if err != nil {
-	// 		log.Panic(err)
-	// 	}
+		_, err = tx.CreateBucket(bucketName)
+		if err != nil {
+			log.Panic(err)
+		}
 
-	// 	return nil
-	// })
-	// if err != nil {
-	// 	log.Panic(err)
-	// }
+		return nil
+	})
+	if err != nil {
+		log.Panic(err)
+	}
 
-	// UTXO := u.Blockchain.FindUTXO()
+	UTXO := u.Blockchain.FindUTXO()
 
-	// err = db.Update(func(tx *bolt.Tx) error {
-	// 	b := tx.Bucket(bucketName)
+	err = db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketName)
 
-	// 	for txID, outs := range UTXO {
-	// 		key, err := hex.DecodeString(txID)
-	// 		if err != nil {
-	// 			log.Panic(err)
-	// 		}
+		for txID, outs := range UTXO {
+			key, err := hex.DecodeString(txID)
+			if err != nil {
+				log.Panic(err)
+			}
 
-	// 		err = b.Put(key, outs.Serialize())
-	// 		if err != nil {
-	// 			log.Panic(err)
-	// 		}
-	// 	}
+			err = b.Put(key, outs.Serialize())
+			if err != nil {
+				log.Panic(err)
+			}
+		}
 
-	// 	return nil
-	// })
+		return nil
+	})
 }
 
 // Update updates the UTXO set with transactions from the Block
