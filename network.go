@@ -51,7 +51,7 @@ type tx struct {
 	Transaction []byte
 }
 
-type verzion struct {
+type version struct {
 	Version    int
 	BestHeight int
 	AddrFrom   string
